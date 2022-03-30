@@ -6,16 +6,15 @@ import { MessageList } from "./MessageList";
 
 export const Content: FC = () => {
     return (
-        <Wrapper>
+        <ContentWrapper className='content'>
             <MessageList />
-            <GIFPicker/>
             <Input />
-        </Wrapper>
+        </ContentWrapper>
     )
 }
 
 
-const Wrapper = styled('div')`
+const ContentWrapper = styled('div')`
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -27,6 +26,5 @@ const Wrapper = styled('div')`
     width: 50%;
     height: 50%;
     border: 1px solid #D3D9DE;
-
 `
 

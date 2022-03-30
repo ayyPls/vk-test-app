@@ -1,25 +1,28 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { Message } from "./Message";
 
 export const MessageList: FC = () => {
     return (
 
-        <MessageListWrapper/>
+        <MessageListWrapper className='message-list'>
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+        </MessageListWrapper>
     )
 }
 
 const MessageListWrapper = styled('div')`
-height: 100%;
-width: 100%;
-// background-color: grey;
-
-`
-
-
-const Block = styled('div')`
-    // border: 1px solid blue;
     height: 100%;
     width: 100%;
-    background-color: grey;
+    overflow-y: scroll;
+    padding: 12px 17px;
 
+    & > div {
+        margin-top: 10px;
+    }
 `
