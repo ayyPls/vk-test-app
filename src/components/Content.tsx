@@ -23,8 +23,8 @@ const ContentWrapper = styled('div')`
     left: 0;
     right: 0;
     margin: auto;
-    width: 50%;
-    height: 50%;
+    width: 70%;
+    height: 70%;
     border: 1px solid #D3D9DE;
 `
 
