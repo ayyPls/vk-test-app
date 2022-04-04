@@ -1,23 +1,31 @@
 import { FC } from "react";
 import styled from "styled-components";
+import {
+    GIF,
+    // GiphyResponse
+} from "./Input";
 
-export const GIFPicker: FC<{ open: boolean }> = ({ open }) => {
 
+const GIFImage: FC<{ gif: GIF }> = ({ gif }) => {
+    return (
+        <ImageWrapper>
+            <img src={gif.images.preview_gif.url} />
+        </ImageWrapper>
+    )
+}
+
+export const GIFPicker: FC<{ gifList: Array<any> | null, error: string | null }> = ({ gifList, error }) => {
 
     return (
-        open ?
-            <GIFPickerWrapper className='gif-picker'>
-                <Grid>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </Grid>
-            </GIFPickerWrapper>
-            : <></>
+        <GIFPickerWrapper className='gif-picker'>
+            {error}
+            <Grid>
+                {
+                    gifList?.map(gif =>
+                        <GIFImage key={gif.id} gif={gif} />)
+                }
+            </Grid>
+        </GIFPickerWrapper>
     )
 }
 
@@ -40,10 +48,20 @@ const Grid = styled('div')`
     gap: 10px;
     justify-items: center;
     grid-template-columns: repeat(3, 1fr);
+`
 
-    & div{
-        width: 118px;
-        height: 118px;
-        background-color: red;
+const ImageWrapper = styled('div')`
+    display: flex;
+    align-items: center;
+    // border: 1px solid red;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 6px;
+    // background-color: #ccc;
+
+    & img{
+        width: 100%;
+        // height: auto;
     }
 `

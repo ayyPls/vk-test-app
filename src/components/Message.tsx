@@ -12,8 +12,10 @@ export const Message: FC = () => {
 
 const MessageWrapper = styled('div')`
     display: inline-flex;
-    background-color: red;
+    background-color: #C4C4C4;
     border-radius: 6px;
+    margin-top: 10px;
+    width: 70%;
 `
 
 const MessageContent = styled('div')`

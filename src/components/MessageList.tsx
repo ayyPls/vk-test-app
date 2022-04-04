@@ -21,8 +21,6 @@ const MessageListWrapper = styled('div')`
     width: 100%;
     overflow-y: scroll;
     padding: 12px 17px;
-
-    & > div {
-        margin-top: 10px;
-    }
+    display: flex;
+    flex-direction: column;
 `
