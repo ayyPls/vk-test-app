@@ -1,7 +1,6 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { searchGIF } from "../api/giphy";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { fetchGIF } from "../store/actionCreators/media";
 import { GIFPicker } from './GIFPicker'
@@ -45,7 +44,8 @@ export const Input: FC = () => {
     const [message, setMessage] = useState('')
 
 
-    const { media, error } = useAppSelector(state => state.media)
+    const { media, error, isLoading } = useAppSelector(state => state.media)
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -53,28 +53,29 @@ export const Input: FC = () => {
     }, [message])
 
     useEffect(() => {
+        let isCanceled = false;
         if (open && regExp.test(message)) {
-            console.log(message)
-            dispatch(fetchGIF(message.replace('/gif ', '')))
+            if (!isCanceled) dispatch(fetchGIF(message.replace('/gif ', '')))
         }
+        //return to prevent render old data
+        return () => { isCanceled = true; }
     }, [open, message])
 
     const handleChangeInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(event.target.value)
     }
     const handleOpenGIFPicker = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setMessage('/gif ')
+        setMessage('/gif ' + message.replace('/gif ', ''))
     }
 
     return (
         <>
-            {open ? <GIFPicker gifList={media} error = {error} /> : null}
+            {open ? <GIFPicker gifList={media} error={error} isLoading={isLoading} /> : null}
             <InputWrapper className='input'>
-                <CustomInput type='text' placeholder="Напишите сообщение..." value={message} onChange={handleChangeInputValue} />
+                <CustomInput type='text' placeholder="Напишите сообщение..." value={message} onChange={handleChangeInputValue} autoFocus={true} />
                 <InputHelper onClick={handleOpenGIFPicker} >icon</InputHelper>
             </InputWrapper>
         </>
-
     )
 }
 

@@ -2,12 +2,13 @@ import { Dispatch } from "redux"
 import { MediaAction, MediaActionTypes } from "../types/media"
 import { searchGIF } from "../../api/giphy"
 
-export const fetchGIF = (query: string) => {
+export const fetchGIF = (query: string, offset: number = 0) => {
     return async (dispatch: Dispatch<MediaAction>) => {
         try {
-            dispatch({ type: MediaActionTypes.FETCH, payload: [] })
-            const response = await searchGIF(query)
-            dispatch({ type: MediaActionTypes.FETCH, payload: response.data.data })
+            const response = await searchGIF(query, offset)
+            response.data.data.length > 0 ?
+                dispatch({ type: MediaActionTypes.FETCH, payload: response.data.data })
+            : dispatch({ type: MediaActionTypes.ERROR, payload: 'Медиафайлы не найдены' })
         }
         catch (e) {
             dispatch({ type: MediaActionTypes.ERROR, payload: 'Произошла ошибка при загрузке медиафайлов' })

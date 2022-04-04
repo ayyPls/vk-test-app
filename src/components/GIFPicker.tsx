@@ -2,11 +2,10 @@ import { FC } from "react";
 import styled from "styled-components";
 import {
     GIF,
-    // GiphyResponse
 } from "./Input";
 
 
-const GIFImage: FC<{ gif: GIF }> = ({ gif }) => {
+const GIFItem: FC<{ gif: GIF }> = ({ gif }) => {
     return (
         <ImageWrapper>
             <img src={gif.images.preview_gif.url} />
@@ -14,17 +13,18 @@ const GIFImage: FC<{ gif: GIF }> = ({ gif }) => {
     )
 }
 
-export const GIFPicker: FC<{ gifList: Array<any> | null, error: string | null }> = ({ gifList, error }) => {
+export const GIFPicker: FC<{ gifList: Array<GIF> | null, error: string | null, isLoading: boolean }> = ({ gifList, error, isLoading }) => {
 
     return (
         <GIFPickerWrapper className='gif-picker'>
-            {error}
-            <Grid>
-                {
-                    gifList?.map(gif =>
-                        <GIFImage key={gif.id} gif={gif} />)
-                }
-            </Grid>
+            {error ? <ErrorMessage>{error}</ErrorMessage> :
+                <Grid>
+                    {
+                        gifList?.map(gif =>
+                            <GIFItem key={gif.id} gif={gif} />)
+                    }
+                </Grid>
+            }
         </GIFPickerWrapper>
     )
 }
@@ -53,15 +53,23 @@ const Grid = styled('div')`
 const ImageWrapper = styled('div')`
     display: flex;
     align-items: center;
-    // border: 1px solid red;
     width: 100%;
-    height: 200px;
+    max-height: 200px;
     overflow: hidden;
     border-radius: 6px;
-    // background-color: #ccc;
+    background-color: #C4C4C4;
 
     & img{
         width: 100%;
-        // height: auto;
+        height: 100%;
     }
+`
+
+const ErrorMessage = styled('div')`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 `
