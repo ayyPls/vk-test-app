@@ -56,6 +56,7 @@ export const Input: FC = () => {
             {open ? <GIFPicker  query={message} /> : null}
             <InputWrapper className='input'>
                 <CustomInput type='text' placeholder="Напишите сообщение..." value={message} onChange={handleChangeInputValue} autoFocus={true} />
+                {/* change button to onclose or clear input message  */}
                 <InputHelper onClick={handleOpenGIFPicker} >
                     icon
                 </InputHelper>

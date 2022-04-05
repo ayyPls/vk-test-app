@@ -1,18 +1,17 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { useAppSelector } from "../hooks/redux";
 import { Message } from "./Message";
 
 export const MessageList: FC = () => {
+    const { messages } = useAppSelector(state => state.messages)
     return (
+        < MessageListWrapper className='message-list' >
+            {messages.map(message =>
+                <Message mediaURL={message.mediaURL} key={message.id} />
 
-        <MessageListWrapper className='message-list'>
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-            <Message />
-        </MessageListWrapper>
+            )}
+        </MessageListWrapper >
     )
 }
 

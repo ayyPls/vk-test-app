@@ -1,10 +1,10 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-export const Message: FC = () => {
+export const Message: FC<{ mediaURL: string }> = ({ mediaURL }) => {
     return (
         <MessageWrapper className='message'>
-            <MessageContent />
+            <MessageContent><img src={mediaURL} /></MessageContent>
         </MessageWrapper>
     )
 }
@@ -13,12 +13,17 @@ export const Message: FC = () => {
 const MessageWrapper = styled('div')`
     display: inline-flex;
     background-color: #C4C4C4;
-    border-radius: 6px;
+    border-radius: 12px;
     margin-top: 10px;
     width: 70%;
 `
 
 const MessageContent = styled('div')`
-    width: 500px;
-    height: 200px;
+    width: 100%;
+    height: 100%;
+    & img{
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+    }
 `

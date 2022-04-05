@@ -1,15 +1,24 @@
+import { url } from "inspector";
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { useAppSelector } from "../hooks/useAppSelector";
+import { useAppSelector } from "../hooks/redux";
 import { fetchGIF } from "../store/actionCreators/media";
+import { sendMessage } from "../store/actionCreators/message";
 import {
     GIF,
 } from "./Input";
 
 const GIFItem: FC<{ gif: GIF }> = ({ gif }) => {
+
+    const dispatch = useDispatch()
+
+    const handleClick = (e: any) => {
+        return dispatch(sendMessage(gif.id, gif.images.preview_gif.url))
+    }
+
     return (
-        <ImageWrapper>
+        <ImageWrapper onClick={handleClick}>
             <img src={gif.images.preview_gif.url} />
         </ImageWrapper>
     )
@@ -18,11 +27,11 @@ const GIFItem: FC<{ gif: GIF }> = ({ gif }) => {
 export const GIFPicker: FC<{ query: string }> = ({ query }) => {
 
     const regExp: RegExp = /^\/gif [^.,+-]+$/
+
     const [offset, setOffset] = useState(0)
     const [scrollValue, setScrollValue] = useState(0)
     const { media, error, isLoading } = useAppSelector(state => state.media)
     const dispatch = useDispatch()
-
 
     const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
         const containerHeight = event.currentTarget.clientHeight;
@@ -51,7 +60,7 @@ export const GIFPicker: FC<{ query: string }> = ({ query }) => {
     }, [query, offset])
 
     return (
-        <GIFPickerWrapper className='gif-picker' onScroll={handleScroll}>
+        <GIFPickerWrapper className='gif-picker' onScroll={handleScroll} id='xui'>
             {error ? <ErrorMessage>{error}</ErrorMessage> :
                 <Grid>
                     {

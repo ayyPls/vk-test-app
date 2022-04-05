@@ -6,12 +6,10 @@ export const fetchGIF = (query: string, offset: number = 0, signal: AbortSignal)
     return async (dispatch: Dispatch<MediaAction>) => {
         try {
             const response = await searchGIF(query, offset, signal)
-            response.data.data.length > 0 ?
-                dispatch({ type: MediaActionTypes.FETCH, payload: response.data.data })
-                : dispatch({ type: MediaActionTypes.ERROR, payload: 'Медиафайлы не найдены' })
+            dispatch({ type: MediaActionTypes.FETCH, payload: response.data.data })
         }
         catch (e) {
-            dispatch({ type: MediaActionTypes.ERROR, payload: 'Произошла ошибка при загрузке медиафайлов' })
+            dispatch({ type: MediaActionTypes.UPDATE, payload: 'Загрузка...' })
         }
     }
 }

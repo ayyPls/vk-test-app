@@ -4,14 +4,10 @@ export interface MediaState {
     isLoading: boolean,
     error: string | null
 }
-// interface MessageAction{
-//     type: string,
-//     payload?: any
-// }
-
 
 export enum MediaActionTypes{
     FETCH = 'FETCH',
+    UPDATE = 'UPDATE',
     ERROR = 'ERROR'
 }
 
@@ -21,11 +17,11 @@ export interface FetchMediaAction{
     payload: any[]
 }
 
-export interface ErrorMediaAction{
-    type: MediaActionTypes.ERROR
+export interface UpdateMediaAction{
+    type: MediaActionTypes.UPDATE
     payload: string
 }
 
 
-export type MediaAction = FetchMediaAction | ErrorMediaAction
+export type MediaAction = FetchMediaAction | UpdateMediaAction
 
