@@ -1,9 +1,11 @@
-import { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { useAppSelector } from "../hooks/useAppSelector";
+import { fetchGIF } from "../store/actionCreators/media";
 import {
     GIF,
 } from "./Input";
-
 
 const GIFItem: FC<{ gif: GIF }> = ({ gif }) => {
     return (
@@ -13,14 +15,47 @@ const GIFItem: FC<{ gif: GIF }> = ({ gif }) => {
     )
 }
 
-export const GIFPicker: FC<{ gifList: Array<GIF> | null, error: string | null, isLoading: boolean }> = ({ gifList, error, isLoading }) => {
+export const GIFPicker: FC<{ query: string }> = ({ query }) => {
+
+    const regExp: RegExp = /^\/gif [^.,+-]+$/
+    const [offset, setOffset] = useState(0)
+    const [scrollValue, setScrollValue] = useState(0)
+    const { media, error, isLoading } = useAppSelector(state => state.media)
+    const dispatch = useDispatch()
+
+
+    const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+        const containerHeight = event.currentTarget.clientHeight;
+        const scrollHeight = event.currentTarget.scrollHeight;
+        const scrollTop = event.currentTarget.scrollTop;
+        setScrollValue(((containerHeight + scrollTop) / scrollHeight) * 100);
+    }
+
+    useEffect(() => {
+        if (scrollValue >= 95) {
+            setOffset((prev) => prev + 12)
+        }
+    }, [scrollValue])
+
+    useEffect(() => {
+        const abortController = new AbortController();
+        const { signal } = abortController;
+
+        if (regExp.test(query)) {
+            if (!signal.aborted) {
+                dispatch(fetchGIF(query.replace('/gif ', ''), offset, signal))
+            }
+        }
+        //abort api call on component unmount
+        return () => { abortController.abort() }
+    }, [query, offset])
 
     return (
-        <GIFPickerWrapper className='gif-picker'>
+        <GIFPickerWrapper className='gif-picker' onScroll={handleScroll}>
             {error ? <ErrorMessage>{error}</ErrorMessage> :
                 <Grid>
                     {
-                        gifList?.map(gif =>
+                        media?.map(gif =>
                             <GIFItem key={gif.id} gif={gif} />)
                     }
                 </Grid>

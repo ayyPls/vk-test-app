@@ -1,8 +1,5 @@
-import React, { FC, useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC, useState, useEffect } from "react";
 import styled from "styled-components";
-import { useAppSelector } from "../hooks/useAppSelector";
-import { fetchGIF } from "../store/actionCreators/media";
 import { GIFPicker } from './GIFPicker'
 
 interface ImageData {
@@ -42,24 +39,10 @@ export const Input: FC = () => {
     const regExp: RegExp = /^\/gif [^.,+-]+$/
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState('')
-
-
-    const { media, error, isLoading } = useAppSelector(state => state.media)
-
-    const dispatch = useDispatch()
-
+ 
     useEffect(() => {
         setOpen(regExp.test(message))
     }, [message])
-
-    useEffect(() => {
-        let isCanceled = false;
-        if (open && regExp.test(message)) {
-            if (!isCanceled) dispatch(fetchGIF(message.replace('/gif ', '')))
-        }
-        //return to prevent render old data
-        return () => { isCanceled = true; }
-    }, [open, message])
 
     const handleChangeInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(event.target.value)
@@ -70,10 +53,12 @@ export const Input: FC = () => {
 
     return (
         <>
-            {open ? <GIFPicker gifList={media} error={error} isLoading={isLoading} /> : null}
+            {open ? <GIFPicker  query={message} /> : null}
             <InputWrapper className='input'>
                 <CustomInput type='text' placeholder="Напишите сообщение..." value={message} onChange={handleChangeInputValue} autoFocus={true} />
-                <InputHelper onClick={handleOpenGIFPicker} >icon</InputHelper>
+                <InputHelper onClick={handleOpenGIFPicker} >
+                    icon
+                </InputHelper>
             </InputWrapper>
         </>
     )

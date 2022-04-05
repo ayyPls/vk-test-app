@@ -10,9 +10,11 @@ const InitialState: MediaState = {
 export const mediaReducer = (state: MediaState = InitialState, action: MediaAction): MediaState => {
     switch (action.type) {
         case MediaActionTypes.FETCH:
-            return { isLoading: false, error: null, media: action.payload }
+            const newArray = [...state.media]
+            newArray.push(...action.payload)
+            return { isLoading: false, error: null, media: newArray }
         case MediaActionTypes.ERROR:
-            return { isLoading: false, error: action.payload, media: [] }
+            return { isLoading: false, error: action.payload, media: state.media }
         default: return state
     }
 }
