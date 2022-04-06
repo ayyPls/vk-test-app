@@ -1,9 +1,12 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { UserIcon } from "./assets/Icons";
+
 
 export const Message: FC<{ mediaURL: string }> = ({ mediaURL }) => {
     return (
         <MessageWrapper className='message'>
+            <UserAvatar>{UserIcon}</UserAvatar>
             <MessageContent><img src={mediaURL} /></MessageContent>
         </MessageWrapper>
     )
@@ -11,19 +14,27 @@ export const Message: FC<{ mediaURL: string }> = ({ mediaURL }) => {
 
 
 const MessageWrapper = styled('div')`
-    display: inline-flex;
-    background-color: #C4C4C4;
+    display: flex;
+    align-items: flex-end;
     border-radius: 12px;
     margin-top: 10px;
-    width: 70%;
+    width: fit-content;
 `
 
 const MessageContent = styled('div')`
-    width: 100%;
-    height: 100%;
+    display: inline;
+
     & img{
-        width: 100%;
-        height: 100%;
+        min-width: 350px;
+        max-width: 70%;
         border-radius: 12px;
+    }
+`
+
+const UserAvatar = styled('div')`
+    padding: 10px;
+    svg{
+        width: 36px;
+        height: 36px;
     }
 `

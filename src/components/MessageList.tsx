@@ -1,16 +1,19 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { useAppSelector } from "../hooks/redux";
+import { ErrorMessage } from "./GIFPicker";
 import { Message } from "./Message";
 
 export const MessageList: FC = () => {
     const { messages } = useAppSelector(state => state.messages)
     return (
         < MessageListWrapper className='message-list' >
-            {messages.map(message =>
-                <Message mediaURL={message.mediaURL} key={message.id} />
+            {messages.length ?
+                messages.map(message =>
+                    <Message mediaURL={message.mediaURL} key={message.id} />
+                ) : <ErrorMessage>no messages yet :(</ErrorMessage>
+            }
 
-            )}
         </MessageListWrapper >
     )
 }

@@ -1,5 +1,4 @@
 import { Dispatch } from "redux"
-import { MediaAction, MediaActionTypes } from "../types/media"
 import { MessageAction, MessageActionTypes } from "../types/message"
 
 export const sendMessage = (id: string, url: string) => {

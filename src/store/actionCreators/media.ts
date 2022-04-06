@@ -9,7 +9,14 @@ export const fetchGIF = (query: string, offset: number = 0, signal: AbortSignal)
             dispatch({ type: MediaActionTypes.FETCH, payload: response.data.data })
         }
         catch (e) {
-            dispatch({ type: MediaActionTypes.UPDATE, payload: 'Загрузка...' })
+            dispatch({ type: MediaActionTypes.ERROR, payload: 'Загрузка...' })
         }
+    }
+}
+
+
+export const clearMedia = () => {
+    return async (dispatch: Dispatch<MediaAction>) => {
+        dispatch({type: MediaActionTypes.CLEAR, payload: []})
     }
 }

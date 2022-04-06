@@ -1,6 +1,11 @@
 import React, { FC, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { GIFPicker } from './GIFPicker'
+import { useAppSelector } from "../hooks/redux";
+import { clearMedia } from "../store/actionCreators/media";
+import { CloseIcon, GifIcon } from "./assets/Icons";
+import { GIFPicker } from './GIFPicker';
+
 
 interface ImageData {
     height: number,
@@ -25,7 +30,7 @@ interface IImages {
 export interface GIF {
     type: 'gif',
     id: string,
-    images: IImages
+    images: IImages,
 }
 
 export interface GiphyResponse {
@@ -34,15 +39,27 @@ export interface GiphyResponse {
     pagination: any
 }
 
+
+
+
+
 export const Input: FC = () => {
 
-    const regExp: RegExp = /^\/gif [^.,+-]+$/
     const [open, setOpen] = useState(false)
     const [message, setMessage] = useState('')
- 
+    const { messages } = useAppSelector(state => state.messages)
+    const dispatch = useDispatch()
+    
+
     useEffect(() => {
+        const regExp: RegExp = /^\/gif [^.,+-]+$/
         setOpen(regExp.test(message))
     }, [message])
+
+    useEffect(() => {
+        setOpen(false)
+        setMessage('')
+    }, [messages.length])
 
     const handleChangeInputValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(event.target.value)
@@ -50,16 +67,22 @@ export const Input: FC = () => {
     const handleOpenGIFPicker = (event: React.MouseEvent<HTMLButtonElement>) => {
         setMessage('/gif ' + message.replace('/gif ', ''))
     }
+    const handleCloseGIFPicker = (event: React.MouseEvent<HTMLButtonElement>) => {
+        dispatch(clearMedia())
+        setMessage('')
+    }
 
     return (
         <>
-            {open ? <GIFPicker  query={message} /> : null}
+            {open ? <GIFPicker query={message} /> : null}
             <InputWrapper className='input'>
                 <CustomInput type='text' placeholder="Напишите сообщение..." value={message} onChange={handleChangeInputValue} autoFocus={true} />
-                {/* change button to onclose or clear input message  */}
-                <InputHelper onClick={handleOpenGIFPicker} >
-                    icon
-                </InputHelper>
+
+                {
+                    // no media update on handleOpenGIFPicker
+                    open ? <InputHelper onClick={handleCloseGIFPicker} >{CloseIcon}</InputHelper> : <InputHelper onClick={handleOpenGIFPicker} >{GifIcon}</InputHelper>
+                }
+
             </InputWrapper>
         </>
     )
@@ -80,7 +103,14 @@ const CustomInput = styled('input')`
     border: 1px solid #D3D9DE;
     height: 36px;
     border-radius: 6px;
+
+    :focus{
+        outline: 1px solid #292626;
+    }
 `
 const InputHelper = styled('button')`
     width: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `

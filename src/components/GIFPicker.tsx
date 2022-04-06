@@ -1,9 +1,8 @@
-import { url } from "inspector";
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useAppSelector } from "../hooks/redux";
-import { fetchGIF } from "../store/actionCreators/media";
+import { clearMedia, fetchGIF } from "../store/actionCreators/media";
 import { sendMessage } from "../store/actionCreators/message";
 import {
     GIF,
@@ -26,11 +25,9 @@ const GIFItem: FC<{ gif: GIF }> = ({ gif }) => {
 
 export const GIFPicker: FC<{ query: string }> = ({ query }) => {
 
-    const regExp: RegExp = /^\/gif [^.,+-]+$/
-
     const [offset, setOffset] = useState(0)
     const [scrollValue, setScrollValue] = useState(0)
-    const { media, error, isLoading } = useAppSelector(state => state.media)
+    const { media, error } = useAppSelector(state => state.media)
     const dispatch = useDispatch()
 
     const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
@@ -40,13 +37,20 @@ export const GIFPicker: FC<{ query: string }> = ({ query }) => {
         setScrollValue(((containerHeight + scrollTop) / scrollHeight) * 100);
     }
 
+    useEffect(()=>{
+        dispatch(clearMedia())
+    }, [query])
+
+
     useEffect(() => {
-        if (scrollValue >= 95) {
+        if (scrollValue >= 100) {
             setOffset((prev) => prev + 12)
         }
     }, [scrollValue])
 
     useEffect(() => {
+        const regExp: RegExp = /^\/gif [^.,+-]+$/
+
         const abortController = new AbortController();
         const { signal } = abortController;
 
@@ -61,13 +65,19 @@ export const GIFPicker: FC<{ query: string }> = ({ query }) => {
 
     return (
         <GIFPickerWrapper className='gif-picker' onScroll={handleScroll} id='xui'>
-            {error ? <ErrorMessage>{error}</ErrorMessage> :
-                <Grid>
-                    {
-                        media?.map(gif =>
-                            <GIFItem key={gif.id} gif={gif} />)
-                    }
-                </Grid>
+            {
+                error ? <ErrorMessage>{error}</ErrorMessage> :
+                    media.length ?
+                        <Grid>
+                            {
+                                media?.map((gif: GIF, index) =>
+                                    <GIFItem key={index} gif={gif} />)
+                            }
+
+                        </Grid>
+                        :
+                        <ErrorMessage>no gifs found :(</ErrorMessage>
+
             }
         </GIFPickerWrapper>
     )
@@ -75,7 +85,7 @@ export const GIFPicker: FC<{ query: string }> = ({ query }) => {
 
 
 const GIFPickerWrapper = styled('div')`
-    position: absolute;
+    // position: absolute;
     border: 1px solid #D3D9DE;
     border-radius: 6px;
     height: calc(100% - 111px);
@@ -84,6 +94,7 @@ const GIFPickerWrapper = styled('div')`
     padding: 9px 10px;
     overflow-y: scroll;
     background-color: white;
+
 `
 
 
@@ -101,7 +112,6 @@ const ImageWrapper = styled('div')`
     max-height: 200px;
     overflow: hidden;
     border-radius: 6px;
-    background-color: #C4C4C4;
 
     & img{
         width: 100%;
@@ -109,11 +119,12 @@ const ImageWrapper = styled('div')`
     }
 `
 
-const ErrorMessage = styled('div')`
+export const ErrorMessage = styled('div')`
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #292626;
 
 `
